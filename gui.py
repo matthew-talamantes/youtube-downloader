@@ -1,24 +1,35 @@
 import tkinter as tk
+from main import downloadVidio, downloadAudio
 # import threading
 
-def submit():
+def submit(audioOnly):
     url = urlEntry.get()
-    resultLabel['text'] = f'You submitted: {url}'
+    audioOnly = audioOnly.get()
+    if not audioOnly:
+        result = downloadVidio(url)
+    else:
+        result = downloadAudio(url)
+    resultLabel['text'] = f'{result}'
 
 window = tk.Tk()
 message = ''
 inputFrame = tk.Frame(master=window)
 urlLabel = tk.Label(master=inputFrame, text='Enter URL')
 urlEntry = tk.Entry(master=inputFrame, width=100)
+optionsFrame = tk.Frame(master=window)
+audioOnly = tk.IntVar()
+audioOnlyBox = tk.Checkbutton(master=optionsFrame, text='Audio Only', variable=audioOnly)
 
 urlLabel.grid(row=0, column=0, sticky='w')
 urlEntry.grid(row=1, column=0, sticky='w')
-submitBtn = tk.Button(master=window, text='Submit', command=submit)
+audioOnlyBox.grid(row=0, column=0)
+submitBtn = tk.Button(master=window, text='Submit', command= lambda: submit(audioOnly))
 resultLabel = tk.Label(master=window, text=message)
 
 inputFrame.grid(row=0, column=0, columnspan=2, padx=10)
-submitBtn.grid(row=1, column=0, padx=10)
-resultLabel.grid(row=1, column=1, padx=10)
+optionsFrame.grid(row=1, column=0, padx=10)
+submitBtn.grid(row=2, column=0, padx=10)
+resultLabel.grid(row=2, column=1, padx=10)
 
 window.mainloop()
 # window = tk.Tk()

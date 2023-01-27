@@ -1,23 +1,31 @@
-from pytube import YouTube
+from pytube import YouTube, Playlist
 
-def download(ytObject):
+def download(ytObject, path='./vids/'):
     try:
-        ytObject.download(output_path='./vids/')
+        ytObject.download(output_path=path)
     except:
         print('An error has occured during download')
-    print('done')
+        return 'An error has occured during download'
+    return 'success'
 
 def downloadVidio(link):
     ytObject = YouTube(link)
     ytObject = ytObject.streams.get_highest_resolution()
-    download(ytObject)
+    result = download(ytObject)
+    return result
     
 
 def downloadAudio(link):
     ytObject = YouTube(link)
     ytObject = ytObject.streams.get_audio_only()
-    download(ytObject)
+    result = download(ytObject)
+    return result
+
+def downloadPlaylist(link):
+    playlistObj = Playlist(link)
+    playlistName = playlistObj.title
 
 
-link = input('Insert youtube link: ')
-downloadAudio(link)
+if '__name__' == '__main__':
+    link = input('Insert youtube link: ')
+    downloadAudio(link)
