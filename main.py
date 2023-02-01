@@ -8,10 +8,13 @@ def download(ytObject, path='./vids/'):
         return 'An error has occured during download'
     return 'success'
 
-def downloadVidio(link):
+def downloadVidio(link, audioOnly=False, path='./vids/'):
     ytObject = YouTube(link)
-    ytObject = ytObject.streams.get_highest_resolution()
-    result = download(ytObject)
+    if audioOnly:
+        ytObject = ytObject.streams.get_audio_only()
+    else:
+        ytObject = ytObject.streams.get_highest_resolution()
+    result = download(ytObject, path)
     return result
     
 
@@ -21,9 +24,15 @@ def downloadAudio(link):
     result = download(ytObject)
     return result
 
-def downloadPlaylist(link):
+def downloadPlaylist(link, audioOnly=False, path='./vids/'):
     playlistObj = Playlist(link)
     playlistName = playlistObj.title
+    playlistPath = f'{path}{playlistName}'
+    for video in playlistObj.video_urls:
+        downloadVidio(video, audioOnly, playlistPath)
+    
+    return 'Done'
+
 
 
 if '__name__' == '__main__':

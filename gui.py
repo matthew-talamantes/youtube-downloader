@@ -1,14 +1,15 @@
 import tkinter as tk
-from main import downloadVidio, downloadAudio
+from main import downloadVidio, downloadAudio, downloadPlaylist
 # import threading
 
-def submit(audioOnly):
+def submit(audioOnly, playlist):
     url = urlEntry.get()
-    audioOnly = audioOnly.get()
-    if not audioOnly:
-        result = downloadVidio(url)
+    audioOnly = bool(audioOnly.get())
+    playlist = bool(playlist.get())
+    if not playlist:
+        result = downloadVidio(url, audioOnly)
     else:
-        result = downloadAudio(url)
+        result = downloadPlaylist(url, audioOnly)
     resultLabel['text'] = f'{result}'
 
 window = tk.Tk()
@@ -18,12 +19,15 @@ urlLabel = tk.Label(master=inputFrame, text='Enter URL')
 urlEntry = tk.Entry(master=inputFrame, width=100)
 optionsFrame = tk.Frame(master=window)
 audioOnly = tk.IntVar()
+playlist = tk.IntVar()
+playlistBox = tk.Checkbutton(master=optionsFrame, text='Playlist', variable=playlist)
 audioOnlyBox = tk.Checkbutton(master=optionsFrame, text='Audio Only', variable=audioOnly)
 
 urlLabel.grid(row=0, column=0, sticky='w')
 urlEntry.grid(row=1, column=0, sticky='w')
-audioOnlyBox.grid(row=0, column=0)
-submitBtn = tk.Button(master=window, text='Submit', command= lambda: submit(audioOnly))
+audioOnlyBox.grid(row=1, column=0)
+playlistBox.grid(row=0, column=0)
+submitBtn = tk.Button(master=window, text='Submit', command= lambda: submit(audioOnly, playlist))
 resultLabel = tk.Label(master=window, text=message)
 
 inputFrame.grid(row=0, column=0, columnspan=2, padx=10)
