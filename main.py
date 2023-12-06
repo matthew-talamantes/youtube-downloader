@@ -1,5 +1,18 @@
 from pytube import YouTube, Playlist
 
+def cleanTitle(title):
+    title = title.replace(' ', '_')
+    title = title.replace('/', '_')
+    title = title.replace('\\', '_')
+    title = title.replace(':', '_')
+    title = title.replace('*', '_')
+    title = title.replace('?', '_')
+    title = title.replace('"', '_')
+    title = title.replace('<', '_')
+    title = title.replace('>', '_')
+    title = title.replace('|', '_')
+    return title
+
 def download(ytObject, path='./vids/'):
     try:
         ytObject.download(output_path=path)
@@ -10,12 +23,31 @@ def download(ytObject, path='./vids/'):
 
 def downloadVidio(link, audioOnly=False, path='./vids/'):
     ytObject = YouTube(link)
+    fileTitle = cleanTitle(ytObject.title)
     if audioOnly:
         ytObject = ytObject.streams.get_audio_only()
     else:
-        ytObject = ytObject.streams.get_highest_resolution()
-    result = download(ytObject, path)
-    return result
+        ytStreams = ytObject.streams.filter(adaptive=True)
+        videoStreams = ytStreams.filter(type='video')
+        audioStreams = ytStreams.filter(type='audio')
+        print('Video Streams:')
+        for index, stream in enumerate(videoStreams):
+            print(f"{index}. Resolution: {stream.resolution}, FPS: {stream.fps}, Type: {stream.mime_type.split('/')[1]}")
+        videoChoice = input('Enter number of choice: ')
+        videoStream = ytObject.streams.get_by_itag(videoStreams[int(videoChoice)].itag)
+        print('Audio Streams:')
+        for index, stream in enumerate(audioStreams):
+            print(f"{index}. Bitrate: {stream.abr}, Type: {stream.mime_type.split('/')[1]}") 
+        audioChoice = input('Enter number of choice: ')
+        audioStream = ytObject.streams.get_by_itag(audioStreams[int(audioChoice)].itag)
+        print('Downloading video...')
+        videoStream.download(output_path=f"{path}{fileTitle}/", filename_prefix='video_')
+        print('Downloading audio...')
+        audioStream.download(output_path=f"{path}{fileTitle}/", filename_prefix='audio_')
+        print('Done!')
+
+    # result = download(ytObject, path)
+    # return result
     
 
 def downloadAudio(link):
