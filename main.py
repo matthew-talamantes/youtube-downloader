@@ -33,8 +33,24 @@ def downloadPlaylist(link, audioOnly=False, path='./vids/'):
     
     return 'Done'
 
+def main():
+    print('What would you like to download?')
+    print('1. Video')
+    print('2. Audio')
+    choice = ''
+    validChoices = ['1', '2', 'quit']
+    while choice == '':
+        choice = input('Enter number of choice: ')
+        if choice not in validChoices:
+            print('Invalid choice')
+            choice = ''
+    if choice == '1':
+        link = input('Insert youtube link: ')
+        downloadVidio(link)
+    elif choice == '2':
+        link = input('Insert youtube link: ')
+        downloadAudio(link)
 
-
-if '__name__' == '__main__':
-    link = input('Insert youtube link: ')
-    downloadAudio(link)
+print('test')
+if __name__ == '__main__':
+    main()
