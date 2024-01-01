@@ -76,12 +76,19 @@ def main():
         if choice not in validChoices:
             print('Invalid choice')
             choice = ''
+    path = input('Enter path to download to: ')
+    if path == '':
+        path = './vids/'
+    path = path.replace('\\', '/')
+    if path[-1] != '/':
+        path += '/'
+    
     if choice == '1':
         link = input('Insert youtube link: ')
-        downloadVidio(link)
+        downloadVidio(link, path=path)
     elif choice == '2':
         link = input('Insert youtube link: ')
-        downloadAudio(link)
+        downloadAudio(link, path=path)
 
 print('test')
 if __name__ == '__main__':
