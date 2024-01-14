@@ -50,10 +50,11 @@ def downloadVidio(link, audioOnly=False, path='./vids/'):
     # return result
     
 
-def downloadAudio(link):
+def downloadAudio(link, path='./audio/'):
     ytObject = YouTube(link)
+    fileTitle = cleanTitle(ytObject.title)
     ytObject = ytObject.streams.get_audio_only()
-    result = download(ytObject)
+    result = download(ytObject, path=f"{path}{fileTitle}/")
     return result
 
 def downloadPlaylist(link, audioOnly=False, path='./vids/'):
